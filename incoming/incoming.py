@@ -40,7 +40,7 @@ class PayloadErrors(object):
         :returns bool: True if has errors, else False.
         '''
 
-        return True if len(self.to_dict().keys()) else False
+        return True if len(list(self.to_dict().keys())) else False
 
     def to_dict(self):
         '''
@@ -66,7 +66,7 @@ class PayloadErrors(object):
         :returns bool: the test result of membership of the provided key
         '''
 
-        return key in self.to_dict().keys()
+        return key in list(self.to_dict().keys())
 
 
 class PayloadValidator(object):
