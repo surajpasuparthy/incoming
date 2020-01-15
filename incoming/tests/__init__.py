@@ -21,7 +21,7 @@ class TestCase(unittest.TestCase):
         item2 = args[1]
 
         # First compare keys
-        self.assertItemsEqual(item1.keys(), item2.keys())
+        self.assertItemsEqual(list(item1.keys()), list(item2.keys()))
 
         for key, val in iteritems(item1):
             assert item2[key] == val

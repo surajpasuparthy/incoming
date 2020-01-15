@@ -68,7 +68,7 @@ class TestPayloadValidator(TestCase):
         result = validator.validate(payload)
         self.assertTrue(isinstance(result, tuple))
         self.assertTrue(result[0])
-        self.assertEquals(result[1], None)
+        self.assertEqual(result[1], None)
 
         # validate an invalid payload
         payload = dict(name='test', age=23)
@@ -87,12 +87,12 @@ class TestPayloadValidator(TestCase):
         payload = dict(name='test', age=23)
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['hobbies'])
+        self.assertItemsEqual(list(errors.keys()), ['hobbies'])
 
         payload = dict(age=23)
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['name', 'hobbies'])
+        self.assertItemsEqual(list(errors.keys()), ['name', 'hobbies'])
 
         class AnotherDummyValidator(PayloadValidator):
             name = datatypes.String()
@@ -112,12 +112,12 @@ class TestPayloadValidator(TestCase):
         payload = dict(name='test')
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['age'])
+        self.assertItemsEqual(list(errors.keys()), ['age'])
 
         payload = dict(name='test', hobbies=['A value'])
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['age'])
+        self.assertItemsEqual(list(errors.keys()), ['age'])
 
     def test_required_when_global_is_false(self):
 
@@ -155,12 +155,12 @@ class TestPayloadValidator(TestCase):
         payload = dict(age=9, hobbies=['A value'])
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['name'])
+        self.assertItemsEqual(list(errors.keys()), ['name'])
 
         payload = dict(hobbies=['A value'])
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['name'])
+        self.assertItemsEqual(list(errors.keys()), ['name'])
 
     def test_required_with_validate_when_global_required_is_true(self):
         class AnotherDummyValidator(self.DummyValidator):
@@ -174,7 +174,7 @@ class TestPayloadValidator(TestCase):
 
         result, errors = validator.validate(payload, required=True)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['age', 'hobbies'])
+        self.assertItemsEqual(list(errors.keys()), ['age', 'hobbies'])
 
     def test_required_with_validate_when_global_required_is_false(self):
         class AnotherDummyValidator(self.DummyValidator):
@@ -188,7 +188,7 @@ class TestPayloadValidator(TestCase):
 
         result, errors = validator.validate(payload, required=True)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['age', 'hobbies'])
+        self.assertItemsEqual(list(errors.keys()), ['age', 'hobbies'])
 
     def test_strict_when_global_is_True(self):
 
@@ -202,10 +202,10 @@ class TestPayloadValidator(TestCase):
         result, errors = validator.validate(payload)
 
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['missing1', 'missing2'])
-        self.assertEquals(errors['missing1'][0],
+        self.assertItemsEqual(list(errors.keys()), ['missing1', 'missing2'])
+        self.assertEqual(errors['missing1'][0],
                           AnotherDummyValidator.strict_error)
-        self.assertEquals(errors['missing2'][0],
+        self.assertEqual(errors['missing2'][0],
                           AnotherDummyValidator.strict_error)
 
     def test_strict_when_global_is_false(self):
@@ -220,7 +220,7 @@ class TestPayloadValidator(TestCase):
         result, errors = validator.validate(payload)
 
         self.assertTrue(result)
-        self.assertEquals(errors, None)
+        self.assertEqual(errors, None)
 
     def test_strict_with_validate_when_global_strict_is_true(self):
         class AnotherDummyValidator(self.DummyValidator):
@@ -235,7 +235,7 @@ class TestPayloadValidator(TestCase):
 
         result, errors = validator.validate(payload, strict=True)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['missing1', 'missing2'])
+        self.assertItemsEqual(list(errors.keys()), ['missing1', 'missing2'])
 
     def test_strict_with_validate_when_global_strict_is_false(self):
         class AnotherDummyValidator(self.DummyValidator):
@@ -250,7 +250,7 @@ class TestPayloadValidator(TestCase):
 
         result, errors = validator.validate(payload, strict=True)
         self.assertFalse(result)
-        self.assertItemsEqual(errors.keys(), ['missing1', 'missing2'])
+        self.assertItemsEqual(list(errors.keys()), ['missing1', 'missing2'])
 
     def test_replace_string_args_replaces_strings_with_methods(self):
         class CustomValidator(PayloadValidator):
@@ -388,16 +388,16 @@ class TestNestedPayloadValidator(TestCase):
                        address=dict(street='Test street', pincode=123))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('name' in errors.keys())
-        self.assertItemsEqual(errors.keys(), ['name'])
+        self.assertTrue('name' in list(errors.keys()))
+        self.assertItemsEqual(list(errors.keys()), ['name'])
 
         # invalid case with invalid nested payload
         payload = dict(name='True', age=9,
                        address=dict(street='Test street', pincode='123'))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('pincode' in errors['address'][1].keys())
-        self.assertItemsEqual(errors['address'][1].keys(), ['pincode'])
+        self.assertTrue('pincode' in list(errors['address'][1].keys()))
+        self.assertItemsEqual(list(errors['address'][1].keys()), ['pincode'])
 
     def test_validates_nested_json_when_cls_is_nested_declared_earlier(self):
         class CustomValidator(PayloadValidator):
@@ -423,16 +423,16 @@ class TestNestedPayloadValidator(TestCase):
                        address=dict(street='Test street', pincode=123))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('name' in errors.keys())
-        self.assertItemsEqual(errors.keys(), ['name'])
+        self.assertTrue('name' in list(errors.keys()))
+        self.assertItemsEqual(list(errors.keys()), ['name'])
 
         # invalid case with invalid nested payload
         payload = dict(name='True', age=9,
                        address=dict(street='Test street', pincode='123'))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('pincode' in errors['address'][1].keys())
-        self.assertItemsEqual(errors['address'][1].keys(), ['pincode'])
+        self.assertTrue('pincode' in list(errors['address'][1].keys()))
+        self.assertItemsEqual(list(errors['address'][1].keys()), ['pincode'])
 
     def test_validates_nested_json_when_cls_is_nested_declared_later(self):
         class CustomValidator(PayloadValidator):
@@ -458,16 +458,16 @@ class TestNestedPayloadValidator(TestCase):
                        address=dict(street='Test street', pincode=123))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('name' in errors.keys())
-        self.assertItemsEqual(errors.keys(), ['name'])
+        self.assertTrue('name' in list(errors.keys()))
+        self.assertItemsEqual(list(errors.keys()), ['name'])
 
         # invalid case with invalid nested payload
         payload = dict(name='True', age=9,
                        address=dict(street='Test street', pincode='123'))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('pincode' in errors['address'][1].keys())
-        self.assertItemsEqual(errors['address'][1].keys(), ['pincode'])
+        self.assertTrue('pincode' in list(errors['address'][1].keys()))
+        self.assertItemsEqual(list(errors['address'][1].keys()), ['pincode'])
 
     def test_validates_nested_json_when_cls_is_global_with_function_type(self):
         class AddressValidator(PayloadValidator):
@@ -508,16 +508,16 @@ class TestNestedPayloadValidator(TestCase):
                        address=dict(street='Test street', pincode=123))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('pincode' in errors['address'][1].keys())
-        self.assertItemsEqual(errors['address'][1].keys(), ['pincode'])
+        self.assertTrue('pincode' in list(errors['address'][1].keys()))
+        self.assertItemsEqual(list(errors['address'][1].keys()), ['pincode'])
 
         # invalid case with invalid nested payload
         payload = dict(name='True', age=9,
                        address=dict(street='Test'*10, pincode='123'))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('street' in errors['address'][1].keys())
-        self.assertItemsEqual(errors['address'][1].keys(), ['street'])
+        self.assertTrue('street' in list(errors['address'][1].keys()))
+        self.assertItemsEqual(list(errors['address'][1].keys()), ['street'])
 
     def test_validates_nested_json_within_nested_json(self):
         class CustomValidator(PayloadValidator):
@@ -551,9 +551,9 @@ class TestNestedPayloadValidator(TestCase):
                                     region=dict(city='vns', country=19)))
         result, errors = validator.validate(payload)
         self.assertFalse(result)
-        self.assertTrue('name' in errors.keys())
-        self.assertItemsEqual(errors.keys(), ['name', 'address'])
-        self.assertItemsEqual(errors['address'][1].keys(),
+        self.assertTrue('name' in list(errors.keys()))
+        self.assertItemsEqual(list(errors.keys()), ['name', 'address'])
+        self.assertItemsEqual(list(errors['address'][1].keys()),
                               ['region', 'pincode'])
-        self.assertItemsEqual(errors['address'][1]['region'][1].keys(),
+        self.assertItemsEqual(list(errors['address'][1]['region'][1].keys()),
                               ['country'])

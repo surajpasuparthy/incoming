@@ -54,7 +54,7 @@ class TestString(TestCase):
     def test_string_validates(self):
         self.assertTrue(datatypes.String.validate('Some string'))
         if PY2:
-            self.assertTrue(datatypes.String.validate(unicode('Some string')))
+            self.assertTrue(datatypes.String.validate(str('Some string')))
         self.assertTrue(datatypes.String.validate(r'Some string'))
         self.assertFalse(datatypes.String.validate(1))
 
@@ -134,7 +134,7 @@ class TestJSON(TestCase):
             inner = datatypes.JSON(InnerJSONValidator)
 
         validator = datatypes.JSON(CustomJSONValidator)
-        self.assertEquals(
+        self.assertEqual(
             validator.cls.inner.cls.__name__,
             'InnerJSONValidator',
         )
@@ -146,7 +146,7 @@ class TestJSON(TestCase):
             errors=errors['nested'])
         self.assertTrue(result)
         self.assertFalse('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 0)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 0)
 
         result = datatypes.JSON(CustomJSONValidator).validate(
             dict(age='10', inner=dict(foo=42)),
@@ -154,7 +154,7 @@ class TestJSON(TestCase):
             errors=errors['nested'])
         self.assertFalse(result)
         self.assertTrue('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 1)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 1)
 
     def test_json_validates_normal_types(self):
         class CustomJSONValidator(PayloadValidator):
@@ -167,7 +167,7 @@ class TestJSON(TestCase):
             errors=errors['nested'])
         self.assertTrue(result)
         self.assertFalse('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 0)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 0)
 
         result = datatypes.JSON(CustomJSONValidator).validate(
             dict(age='10'),
@@ -175,7 +175,7 @@ class TestJSON(TestCase):
             errors=errors['nested'])
         self.assertFalse(result)
         self.assertTrue('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 1)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 1)
 
     def test_json_validates_function_types(self):
         class CustomJSONValidator(PayloadValidator):
@@ -196,7 +196,7 @@ class TestJSON(TestCase):
             errors=errors)
         self.assertTrue(result)
         self.assertFalse('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 0)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 0)
 
         errors = PayloadErrors()
         result = datatypes.JSON(CustomJSONValidator).validate(
@@ -205,4 +205,4 @@ class TestJSON(TestCase):
             errors=errors['nested'])
         self.assertFalse(result)
         self.assertTrue('nested' in errors)
-        self.assertTrue(len(errors.to_dict().keys()) == 1)
+        self.assertTrue(len(list(errors.to_dict().keys())) == 1)
